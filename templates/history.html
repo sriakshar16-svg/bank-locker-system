@@ -47,6 +47,37 @@
             </div>
         </div>
 
+        <!-- New Section for Full Audit Trail -->
+        <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500 mt-8 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">Full System Audit Trail</h2>
+            <p class="text-sm text-gray-500 mb-4">A complete log of all actions, edits, and signatures recorded in the system.</p>
+            
+            <div class="overflow-y-auto h-96 border rounded">
+                <table class="w-full text-left border-collapse">
+                    <thead class="sticky top-0 bg-gray-100">
+                        <tr class="text-gray-700 text-sm border-b">
+                            <th class="p-3">Timestamp</th>
+                            <th class="p-3">Action Type</th>
+                            <th class="p-3">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr class="border-b text-sm hover:bg-gray-50">
+                            <td class="p-3 font-medium text-gray-600">{{ log.timestamp }}</td>
+                            <td class="p-3 font-bold text-blue-600">{{ log.action }}</td>
+                            <td class="p-3">{{ log.description }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="p-4 text-center text-gray-500">No system logs found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>

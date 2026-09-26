@@ -213,8 +213,9 @@ def view_history(request: Request, auth_token: str = Cookie(None)):
     with sqlite3.connect(DB_FILE) as conn:
         conn.row_factory = sqlite3.Row
         history_records = conn.execute("SELECT * FROM locker_history ORDER BY surrender_date DESC").fetchall()
+        full_logs = conn.execute("SELECT * FROM system_logs ORDER BY id DESC").fetchall()
         
-    return templates.TemplateResponse(request=request, name="history.html", context={"records": history_records})
+    return templates.TemplateResponse(request=request, name="history.html", context={"records": history_records, "logs": full_logs})
 
 # --- NEW EDIT FEATURES ---
 
