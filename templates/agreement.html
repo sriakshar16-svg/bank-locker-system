@@ -62,11 +62,21 @@
 
             <div class="mt-20 pt-8 grid grid-cols-2 gap-12 text-center">
                 <div>
-                    <div class="border-t-2 border-gray-800 pt-2 font-bold text-green-700">✓ Digitally Accepted</div>
-                    <p class="mt-1 text-gray-600">{{ locker.primary_holder }}</p>
-                    <p class="text-xs text-gray-400">Via Customer Portal</p>
+                    {% if locker.signature %}
+                        <img src="{{ locker.signature }}" alt="Signature" class="mx-auto h-24 object-contain border-b-2 border-gray-800 mb-2">
+                        <div class="font-bold text-green-700">✓ Digitally Signed</div>
+                        <p class="mt-1 text-gray-600">{{ locker.primary_holder }}</p>
+                    {% else %}
+                        <div class="no-print border-2 border-dashed border-gray-300 rounded p-2 mb-2 bg-gray-50 relative">
+                            <canvas id="sigCanvas" width="250" height="100" class="bg-white border cursor-crosshair mx-auto"></canvas>
+                            <button id="clearBtn" class="absolute top-4 right-4 text-xs bg-red-100 text-red-600 px-2 py-1 rounded shadow hover:bg-red-200">Clear</button>
+                            <button id="saveBtn" class="mt-4 w-full bg-blue-600 text-white text-sm font-bold py-2 rounded shadow hover:bg-blue-700">Save Signature</button>
+                        </div>
+                        <div class="border-t-2 border-gray-300 pt-2 font-bold no-print text-gray-400">Awaiting Signature</div>
+                    {% endif %}
                 </div>
                 <div>
+                    <div class="h-24"></div>
                     <div class="border-t-2 border-gray-800 pt-2 font-bold text-blue-700">✓ System Authorized</div>
                     <p class="mt-1 text-gray-600">Bank Locker System</p>
                     <p class="text-xs text-gray-400">Branch Manager Proxy</p>
@@ -74,5 +84,76 @@
             </div>
         </div>
     </div>
+    {% if not locker.signature %}
+    <script>
+        const canvas = document.getElementById('sigCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            
+            if (!clientX || !clientY) return;
+            
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000000';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing, {passive: false});
+        canvas.addEventListener('touchmove', draw, {passive: false});
+        canvas.addEventListener('touchend', stopDrawing);
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            const dataUrl = canvas.toDataURL('image/png');
+            const btn = document.getElementById('saveBtn');
+            btn.innerText = 'Saving...';
+            btn.disabled = true;
+
+            const res = await fetch('/api/sign/{{ locker.locker_no }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ signature: dataUrl })
+            });
+            
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                alert('Failed to save signature.');
+                btn.innerText = 'Save Signature';
+                btn.disabled = false;
+            }
+        });
+    </script>
+    {% endif %}
 </body>
 </html>

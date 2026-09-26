@@ -45,6 +45,11 @@ def init_db():
             action TEXT,
             description TEXT
         )''')
+        # 4. NEW: Signature column
+        try:
+            conn.execute("ALTER TABLE lockers ADD COLUMN signature TEXT")
+        except sqlite3.OperationalError:
+            pass
 init_db()
 
 def log_action(action: str, description: str):
@@ -144,7 +149,7 @@ def add_locker(
     try:
         with sqlite3.connect(DB_FILE) as conn:
             conn.execute(
-                "INSERT INTO lockers VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO lockers (locker_no, primary_holder, joint_holder, nominee, size, rent, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (locker_no, primary_holder, joint_holder, nominee, size, rent, due_date)
             )
         log_action("ADD", f"Locker {locker_no} allotted to {primary_holder}")
@@ -304,3 +309,18 @@ def view_agreement(locker_no: str, request: Request, auth_token: str = Cookie(No
         return RedirectResponse(url="/", status_code=303)
         
     return templates.TemplateResponse(request=request, name="agreement.html", context={"locker": dict(locker), "date": str(date.today())})
+
+@app.post("/api/sign/{locker_no}")
+async def save_signature(locker_no: str, request: Request, auth_token: str = Cookie(None), client_token: str = Cookie(None)):
+    if not (verify_login(auth_token) or client_token == locker_no):
+        return {"error": "Unauthorized"}
+        
+    data = await request.json()
+    signature_data = data.get("signature")
+    
+    if signature_data:
+        with sqlite3.connect(DB_FILE) as conn:
+            conn.execute("UPDATE lockers SET signature = ? WHERE locker_no = ?", (signature_data, locker_no))
+        log_action("SIGNATURE", f"Signature saved for locker {locker_no}")
+        return {"success": True}
+    return {"error": "No signature provided"}
