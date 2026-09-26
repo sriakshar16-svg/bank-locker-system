@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locker History - Bank Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-5xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">🗄️ Locker Audit History</h1>
+            <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-blue-700 transition">Back to Dashboard</a>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-gray-600">
+            <p class="text-sm text-gray-500 mb-4">This log contains records of all surrendered and removed lockers for legal compliance.</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700 text-sm border-b">
+                            <th class="p-3">Surrender Date</th>
+                            <th class="p-3">Locker No.</th>
+                            <th class="p-3">Previous Primary Holder</th>
+                            <th class="p-3">Previous Joint Holder</th>
+                            <th class="p-3">Previous Nominee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr class="border-b text-sm hover:bg-gray-50">
+                            <td class="p-3 font-bold text-gray-700">{{ record.surrender_date }}</td>
+                            <td class="p-3 font-medium">{{ record.locker_no }}</td>
+                            <td class="p-3">{{ record.primary_holder }}</td>
+                            <td class="p-3">{{ record.joint_holder }}</td>
+                            <td class="p-3">{{ record.nominee }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="p-4 text-center text-gray-500">No historical records found yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

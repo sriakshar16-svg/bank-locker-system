@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Locker {{ locker.locker_no }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-xl font-bold mb-2 text-gray-800">Update Locker Details</h2>
+        <p class="text-sm text-gray-500 mb-6">Locker No: <span class="font-bold text-gray-800">{{ locker.locker_no }}</span></p>
+        
+        <form action="/edit/{{ locker.locker_no }}" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Joint Holder Name</label>
+                <input type="text" name="joint_holder" value="{{ locker.joint_holder }}" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nominee Name</label>
+                <input type="text" name="nominee" value="{{ locker.nominee }}" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            </div>
+            
+            <div class="flex gap-2 pt-4">
+                <a href="/" class="w-1/2 bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded text-center hover:bg-gray-400">Cancel</a>
+                <button type="submit" class="w-1/2 bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Locker Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">🏦 Bank Locker System</h1>
+            <div class="space-x-2 flex">
+                <a href="/history" class="bg-gray-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-gray-700 transition shadow">View History</a>
+                <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded text-sm font-bold hover:bg-red-600 transition shadow">Logout</a>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-bold uppercase">Total Active Lockers</p>
+                <p class="text-3xl font-bold text-gray-800">{{ analytics.total_lockers }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
+                <p class="text-sm text-gray-500 font-bold uppercase">Overdue Accounts</p>
+                <p class="text-3xl font-bold text-red-600">{{ analytics.overdue_count }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-bold uppercase">Total Rent Expected</p>
+                <p class="text-3xl font-bold text-green-600">₹{{ analytics.total_revenue }}</p>
+            </div>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-8">
+            
+            <!-- Left Column: Form -->
+            <div class="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md h-fit">
+                <h2 class="text-xl font-semibold mb-4 border-b pb-2">Allot New Locker</h2>
+                <form action="/add" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Locker Number</label>
+                        <input type="text" name="locker_no" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="e.g. A-101">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Primary Holder</label>
+                        <input type="text" name="primary_holder" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Joint Holder</label>
+                            <input type="text" name="joint_holder" placeholder="(Optional)" class="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nominee</label>
+                            <input type="text" name="nominee" placeholder="(Optional)" class="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Locker Size</label>
+                        <select name="size" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                            <option value="Small">Small (₹1,500)</option>
+                            <option value="Medium">Medium (₹3,000)</option>
+                            <option value="Large">Large (₹5,000)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Rent Due Date</label>
+                        <input type="date" name="due_date" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition">
+                        Save Record
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Column: Table & Search -->
+            <div class="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md">
+                
+                <div class="flex flex-col md:flex-row justify-between items-center border-b pb-4 mb-4 gap-4">
+                    <form action="/" method="GET" class="flex w-full md:w-1/2">
+                        <input type="text" name="search" value="{{ search }}" placeholder="Search by name or locker..." class="w-full border border-gray-300 rounded-l-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <button type="submit" class="bg-gray-800 text-white px-4 rounded-r-md text-sm font-bold hover:bg-gray-700">Search</button>
+                        {% if search %}
+                            <a href="/" class="ml-2 text-sm text-blue-500 mt-2 hover:underline">Clear</a>
+                        {% endif %}
+                    </form>
+
+                    <a href="/export" class="bg-green-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-green-700 transition whitespace-nowrap shadow">
+                        📥 Export Auto-Debit CSV
+                    </a>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-700 text-sm border-b">
+                                <th class="p-3">Locker</th>
+                                <th class="p-3">Holder</th>
+                                <th class="p-3">Size</th>
+                                <th class="p-3">Rent</th>
+                                <th class="p-3">Due Date</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for locker in lockers %}
+                            <tr class="border-b text-sm hover:bg-gray-50">
+                                <td class="p-3 font-medium">{{ locker.locker_no }}</td>
+                                <td class="p-3">
+                                    {{ locker.primary_holder }}
+                                    {% if locker.joint_holder and locker.joint_holder != 'N/A' %}
+                                        <br><span class="text-xs text-gray-500">+ {{ locker.joint_holder }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-3">{{ locker.size }}</td>
+                                <td class="p-3">
+                                    ₹{{ locker.rent }}
+                                    {% if locker.has_penalty %}
+                                        <br><span class="text-xs text-red-500 font-bold">+500 Late Fee</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-3">{{ locker.due_date }}</td>
+                                <td class="p-3 font-bold">
+                                    {% if locker.due_date < today %}
+                                        <span class="text-red-600">🔴 OVERDUE</span>
+                                    {% else %}
+                                        <span class="text-green-600">🟢 ACTIVE</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-3 text-center">
+                                    <div class="flex flex-col gap-2">
+                                        <a href="/edit/{{ locker.locker_no }}" class="text-blue-600 hover:text-blue-800 font-bold border border-blue-600 px-2 py-1 rounded text-xs text-center">
+                                            Edit
+                                        </a>
+                                        <form action="/remove/{{ locker.locker_no }}" method="POST" onsubmit="return confirm('Remove locker {{ locker.locker_no }}?');">
+                                            <button type="submit" class="text-red-500 hover:text-red-700 font-bold border border-red-500 px-2 py-1 rounded text-xs w-full">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="p-4 text-center text-gray-500">
+                                    {% if search %} No matches found for "{{ search }}". {% else %} No lockers allocated yet. {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
