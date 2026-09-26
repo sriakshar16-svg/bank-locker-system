@@ -38,7 +38,12 @@
                     <div><span class="font-bold">Primary Holder:</span> {{ locker.primary_holder }}</div>
                     <div><span class="font-bold">Joint Holder:</span> {{ locker.joint_holder or 'None' }}</div>
                     <div><span class="font-bold">Nominee:</span> {{ locker.nominee or 'None' }}</div>
-                    <div><span class="font-bold">Annual Rent:</span> ₹{{ locker.rent }}</div>
+                    <div><span class="font-bold">Rent Amount:</span> ₹{{ locker.rent }}</div>
+                    <div class="col-span-2 mt-2 pt-2 border-t">
+                        <span class="font-bold mr-4">Renewal Term:</span> 
+                        <span class="inline-flex items-center mr-4">☑ <span class="ml-1">Annual</span></span>
+                        <span class="inline-flex items-center text-gray-400">☐ <span class="ml-1">6 Months</span></span>
+                    </div>
                 </div>
             </div>
 
@@ -46,20 +51,25 @@
                 <strong>1. Terms of Use:</strong> The Hirer agrees to use the locker solely for the purpose of keeping valuables and not for storing any illegal, hazardous, or explosive materials. The Hirer assumes full responsibility for the contents.
             </p>
             <p>
-                <strong>2. Rent Payment:</strong> The annual rent of ₹{{ locker.rent }} is payable in advance. Failure to pay within 30 days of the due date ({{ locker.due_date }}) will attract a late fee penalty of ₹500. The Bank reserves the right to break open the locker if rent remains unpaid for 3 consecutive years.
+                <strong>2. Rent Payment:</strong> The rent of ₹{{ locker.rent }} is payable in advance for the selected renewal term. Failure to pay within 30 days of the due date ({{ locker.due_date }}) will attract a late fee penalty of ₹500. The Bank reserves the right to break open the locker if rent remains unpaid for 3 consecutive years.
             </p>
             <p>
                 <strong>3. Access and Security:</strong> The locker can be operated only by the Primary Holder and the Joint Holder (if applicable). The Bank is not responsible for the contents of the locker. The Hirer must ensure the locker is securely locked before leaving the vault.
             </p>
+            <p>
+                <strong>4. Digital Renewal:</strong> This agreement and all subsequent renewals may be processed entirely online via the Bank's Customer Portal. In-person branch visits are not mandatory for standard renewals.
+            </p>
 
             <div class="mt-20 pt-8 grid grid-cols-2 gap-12 text-center">
                 <div>
-                    <div class="border-t-2 border-gray-800 pt-2 font-bold">Signature of Primary Holder</div>
+                    <div class="border-t-2 border-gray-800 pt-2 font-bold text-green-700">✓ Digitally Accepted</div>
                     <p class="mt-1 text-gray-600">{{ locker.primary_holder }}</p>
+                    <p class="text-xs text-gray-400">Via Customer Portal</p>
                 </div>
                 <div>
-                    <div class="border-t-2 border-gray-800 pt-2 font-bold">Authorized Bank Official</div>
-                    <p class="mt-1 text-gray-600">Branch Manager</p>
+                    <div class="border-t-2 border-gray-800 pt-2 font-bold text-blue-700">✓ System Authorized</div>
+                    <p class="mt-1 text-gray-600">Bank Locker System</p>
+                    <p class="text-xs text-gray-400">Branch Manager Proxy</p>
                 </div>
             </div>
         </div>
