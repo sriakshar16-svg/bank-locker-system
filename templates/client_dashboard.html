@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Locker {{ locker.locker_no }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h1 class="text-3xl font-bold text-gray-800">👋 Welcome, {{ locker.primary_holder }}</h1>
+            <a href="/client-logout" class="bg-red-500 text-white px-4 py-2 rounded text-sm font-bold hover:bg-red-600 transition shadow">Logout</a>
+        </div>
+
+        <div class="bg-white p-8 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-bold border-b pb-2 mb-6">Locker Details</h2>
+            
+            <div class="grid grid-cols-2 gap-6 text-lg">
+                <div>
+                    <p class="text-gray-500 text-sm font-bold uppercase">Locker Number</p>
+                    <p class="font-medium">{{ locker.locker_no }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-bold uppercase">Size</p>
+                    <p class="font-medium">{{ locker.size }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-bold uppercase">Joint Holder</p>
+                    <p class="font-medium">{{ locker.joint_holder or 'None' }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-bold uppercase">Nominee</p>
+                    <p class="font-medium">{{ locker.nominee or 'None' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 {% if locker.has_penalty %}border-red-500{% else %}border-green-500{% endif %}">
+                <h3 class="font-bold text-xl mb-2">Rent Status</h3>
+                <p class="text-gray-600 mb-1">Due Date: <span class="font-bold text-gray-800">{{ locker.due_date }}</span></p>
+                <p class="text-gray-600 mb-4">Amount Due: <span class="font-bold text-gray-800">₹{{ locker.rent }}</span></p>
+                
+                {% if locker.has_penalty %}
+                <div class="bg-red-100 text-red-700 p-3 rounded text-sm font-bold">
+                    ⚠️ Includes ₹500 Late Fee Penalty!
+                </div>
+                {% else %}
+                <div class="bg-green-100 text-green-700 p-3 rounded text-sm font-bold">
+                    ✅ Account is in good standing.
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500 flex flex-col justify-center items-center text-center">
+                <h3 class="font-bold text-xl mb-4">Official Documentation</h3>
+                <p class="text-sm text-gray-600 mb-6">View and print your official bank locker rental agreement for your records.</p>
+                <a href="/agreement/{{ locker.locker_no }}" target="_blank" class="bg-blue-600 text-white px-6 py-3 rounded text-sm font-bold hover:bg-blue-700 transition w-full shadow">📄 View Rental Agreement</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

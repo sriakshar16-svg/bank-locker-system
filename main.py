@@ -38,7 +38,19 @@ def init_db():
             nominee TEXT,
             surrender_date TEXT
         )''')
+        # 3. NEW: System Logs
+        conn.execute('''CREATE TABLE IF NOT EXISTS system_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT,
+            action TEXT,
+            description TEXT
+        )''')
 init_db()
+
+def log_action(action: str, description: str):
+    with sqlite3.connect(DB_FILE) as conn:
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute("INSERT INTO system_logs (timestamp, action, description) VALUES (?, ?, ?)", (now_str, action, description))
 
 def verify_login(auth_token: str = Cookie(None)):
     return auth_token == "logged_in"
@@ -75,6 +87,8 @@ def read_root(request: Request, search: str = "", auth_token: str = Cookie(None)
             lockers_db = conn.execute(query, (f"%{search}%", f"%{search}%")).fetchall()
         else:
             lockers_db = conn.execute("SELECT * FROM lockers ORDER BY due_date ASC").fetchall()
+            
+        logs_db = conn.execute("SELECT * FROM system_logs ORDER BY id DESC LIMIT 5").fetchall()
 
     lockers = []
     total_revenue = 0
@@ -109,7 +123,8 @@ def read_root(request: Request, search: str = "", auth_token: str = Cookie(None)
             "lockers": lockers, 
             "today": today_str,
             "search": search,
-            "analytics": analytics
+            "analytics": analytics,
+            "logs": logs_db
         }
     )
 
@@ -131,6 +146,7 @@ def add_locker(
                 "INSERT INTO lockers VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (locker_no, primary_holder, joint_holder, nominee, size, rent, due_date)
             )
+        log_action("ADD", f"Locker {locker_no} allotted to {primary_holder}")
     except sqlite3.IntegrityError:
         pass 
     return RedirectResponse(url="/", status_code=303)
@@ -154,6 +170,9 @@ def remove_locker(locker_no: str, auth_token: str = Cookie(None)):
             # Step 3: Free up the active locker
             conn.execute("DELETE FROM lockers WHERE locker_no = ?", (locker_no,))
             
+    if locker:
+        log_action("REMOVE", f"Locker {locker_no} surrendered by {locker['primary_holder']}")
+        
     return RedirectResponse(url="/", status_code=303)
 
 @app.get("/export")
@@ -220,4 +239,67 @@ def update_locker(
             "UPDATE lockers SET joint_holder = ?, nominee = ? WHERE locker_no = ?",
             (joint_holder, nominee, locker_no)
         )
+    log_action("EDIT", f"Locker {locker_no} details updated")
     return RedirectResponse(url="/", status_code=303)
+
+# --- NEW CLIENT PORTAL & AGREEMENT FEATURES ---
+
+@app.get("/client-login")
+def client_login_page(request: Request):
+    return templates.TemplateResponse(request=request, name="client_login.html")
+
+@app.post("/client-login")
+def client_login_submit(locker_no: str = Form(...), primary_holder: str = Form(...)):
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        locker = conn.execute("SELECT * FROM lockers WHERE locker_no = ? AND primary_holder = ?", (locker_no, primary_holder)).fetchone()
+    
+    if locker:
+        response = RedirectResponse(url="/client-dashboard", status_code=303)
+        response.set_cookie(key="client_token", value=locker_no)
+        return response
+    return RedirectResponse(url="/client-login?error=1", status_code=303)
+
+@app.get("/client-logout")
+def client_logout():
+    response = RedirectResponse(url="/client-login", status_code=303)
+    response.delete_cookie("client_token")
+    return response
+
+@app.get("/client-dashboard")
+def client_dashboard(request: Request, client_token: str = Cookie(None)):
+    if not client_token:
+        return RedirectResponse(url="/client-login", status_code=303)
+        
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        locker = conn.execute("SELECT * FROM lockers WHERE locker_no = ?", (client_token,)).fetchone()
+        
+    if not locker:
+        response = RedirectResponse(url="/client-login", status_code=303)
+        response.delete_cookie("client_token")
+        return response
+        
+    locker_dict = dict(locker)
+    due = datetime.strptime(locker_dict["due_date"], "%Y-%m-%d").date()
+    days_overdue = (date.today() - due).days
+    locker_dict["has_penalty"] = False
+    if days_overdue > 30:
+        locker_dict["rent"] += LATE_FEE_PENALTY
+        locker_dict["has_penalty"] = True
+        
+    return templates.TemplateResponse(request=request, name="client_dashboard.html", context={"locker": locker_dict, "today": str(date.today())})
+
+@app.get("/agreement/{locker_no}")
+def view_agreement(locker_no: str, request: Request, auth_token: str = Cookie(None), client_token: str = Cookie(None)):
+    if not (verify_login(auth_token) or client_token == locker_no):
+        return RedirectResponse(url="/login", status_code=303)
+        
+    with sqlite3.connect(DB_FILE) as conn:
+        conn.row_factory = sqlite3.Row
+        locker = conn.execute("SELECT * FROM lockers WHERE locker_no = ?", (locker_no,)).fetchone()
+        
+    if not locker:
+        return RedirectResponse(url="/", status_code=303)
+        
+    return templates.TemplateResponse(request=request, name="agreement.html", context={"locker": dict(locker), "date": str(date.today())})

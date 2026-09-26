@@ -13,13 +13,14 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">🏦 Bank Locker System</h1>
             <div class="space-x-2 flex">
+                <a href="/client-login" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-blue-700 transition shadow" target="_blank">Client Portal</a>
                 <a href="/history" class="bg-gray-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-gray-700 transition shadow">View History</a>
                 <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded text-sm font-bold hover:bg-red-600 transition shadow">Logout</a>
             </div>
         </div>
 
         <!-- Analytics Dashboard -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
                 <p class="text-sm text-gray-500 font-bold uppercase">Total Active Lockers</p>
                 <p class="text-3xl font-bold text-gray-800">{{ analytics.total_lockers }}</p>
@@ -31,6 +32,17 @@
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
                 <p class="text-sm text-gray-500 font-bold uppercase">Total Rent Expected</p>
                 <p class="text-3xl font-bold text-green-600">₹{{ analytics.total_revenue }}</p>
+            </div>
+            <!-- Activity Log Mini-Widget -->
+            <div class="bg-gray-800 p-4 rounded-lg shadow border-l-4 border-yellow-500 text-white overflow-y-auto h-full text-xs">
+                <p class="font-bold text-yellow-500 uppercase mb-2">System Activity Log</p>
+                <ul class="space-y-2">
+                    {% for log in logs %}
+                    <li><span class="text-gray-400">[{{ log.timestamp[11:16] }}]</span> <span class="font-bold text-blue-300">{{ log.action }}</span>: {{ log.description }}</li>
+                    {% else %}
+                    <li class="text-gray-400">No recent activity.</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
         

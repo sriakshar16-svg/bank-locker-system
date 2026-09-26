@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Agreement - {{ locker.locker_no }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; max-width: 100%; margin: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-3xl mx-auto bg-white p-12 rounded-lg shadow-md border border-gray-200 container relative">
+        
+        <div class="absolute top-8 right-12 no-print">
+            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-bold hover:bg-gray-700 shadow">🖨️ Print Document</button>
+        </div>
+
+        <div class="text-center border-b-2 border-gray-800 pb-6 mb-8 mt-8">
+            <h1 class="text-3xl font-black uppercase tracking-widest text-gray-900">Bank Locker Rental Agreement</h1>
+            <p class="text-gray-500 mt-2 font-serif italic">Generated on {{ date }}</p>
+        </div>
+
+        <div class="space-y-6 text-gray-800 font-serif leading-relaxed text-justify">
+            <p>
+                This agreement is made on <strong>{{ locker.due_date }}</strong> between the Bank (hereinafter referred to as "The Bank") and <strong>{{ locker.primary_holder }}</strong> (hereinafter referred to as "The Hirer").
+            </p>
+
+            <div class="bg-gray-50 p-6 rounded border border-gray-200">
+                <h3 class="font-bold uppercase text-sm text-gray-500 mb-4 border-b pb-2">Schedule of Locker Details</h3>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="font-bold">Locker Number:</span> {{ locker.locker_no }}</div>
+                    <div><span class="font-bold">Locker Size:</span> {{ locker.size }}</div>
+                    <div><span class="font-bold">Primary Holder:</span> {{ locker.primary_holder }}</div>
+                    <div><span class="font-bold">Joint Holder:</span> {{ locker.joint_holder or 'None' }}</div>
+                    <div><span class="font-bold">Nominee:</span> {{ locker.nominee or 'None' }}</div>
+                    <div><span class="font-bold">Annual Rent:</span> ₹{{ locker.rent }}</div>
+                </div>
+            </div>
+
+            <p>
+                <strong>1. Terms of Use:</strong> The Hirer agrees to use the locker solely for the purpose of keeping valuables and not for storing any illegal, hazardous, or explosive materials. The Hirer assumes full responsibility for the contents.
+            </p>
+            <p>
+                <strong>2. Rent Payment:</strong> The annual rent of ₹{{ locker.rent }} is payable in advance. Failure to pay within 30 days of the due date ({{ locker.due_date }}) will attract a late fee penalty of ₹500. The Bank reserves the right to break open the locker if rent remains unpaid for 3 consecutive years.
+            </p>
+            <p>
+                <strong>3. Access and Security:</strong> The locker can be operated only by the Primary Holder and the Joint Holder (if applicable). The Bank is not responsible for the contents of the locker. The Hirer must ensure the locker is securely locked before leaving the vault.
+            </p>
+
+            <div class="mt-20 pt-8 grid grid-cols-2 gap-12 text-center">
+                <div>
+                    <div class="border-t-2 border-gray-800 pt-2 font-bold">Signature of Primary Holder</div>
+                    <p class="mt-1 text-gray-600">{{ locker.primary_holder }}</p>
+                </div>
+                <div>
+                    <div class="border-t-2 border-gray-800 pt-2 font-bold">Authorized Bank Official</div>
+                    <p class="mt-1 text-gray-600">Branch Manager</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
