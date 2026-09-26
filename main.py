@@ -75,7 +75,8 @@ def logout():
 
 @app.get("/")
 def read_root(request: Request, search: str = "", auth_token: str = Cookie(None)):
-    if not verify_login(auth_token): return RedirectResponse(url="/login", status_code=303)
+    if not verify_login(auth_token): 
+        return templates.TemplateResponse(request=request, name="welcome.html")
 
     today_str = str(date.today())
     today_date = date.today()
