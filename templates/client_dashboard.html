@@ -9,6 +9,7 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex text-slate-800 font-['Outfit']">
     
@@ -17,7 +18,7 @@
         <div>
             <!-- Branding -->
             <div class="p-6 border-b border-blue-900 flex items-center gap-3">
-                <span class="text-3xl">🏦</span>
+                <span class="text-3xl"><i data-lucide="landmark" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight">VaultManager</h1>
                     <p class="text-[10px] text-blue-300 uppercase tracking-widest font-bold">Customer Portal</p>
@@ -27,8 +28,8 @@
             <!-- Navigation -->
             <nav class="p-4 space-y-2 mt-4">
                 <p class="px-4 text-xs font-bold text-blue-400 uppercase tracking-wider mb-2">My Account</p>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-900/20"><span class="text-xl">👤</span> Locker Details</a>
-                <a href="/agreement/{{ locker.locker_no }}" class="flex items-center gap-3 px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-900 rounded-xl transition-colors font-medium"><span class="text-xl">📄</span> Rental Agreement</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-900/20"><span class="text-xl"><i data-lucide="user" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Locker Details</a>
+                <a href="/agreement/{{ locker.locker_no }}" class="flex items-center gap-3 px-4 py-3 text-blue-200 hover:text-white hover:bg-blue-900 rounded-xl transition-colors font-medium"><span class="text-xl"><i data-lucide="file-text" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Rental Agreement</a>
             </nav>
         </div>
         
@@ -42,7 +43,7 @@
                 </div>
             </div>
             <a href="/client-logout" class="flex items-center justify-center gap-2 w-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white font-bold py-2.5 rounded-xl transition-all border border-red-500/30 hover:border-red-500">
-                🚪 Secure Logout
+                <i data-lucide="log-out" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i> Secure Logout
             </a>
         </div>
     </aside>
@@ -51,7 +52,7 @@
     <main class="ml-72 flex-1 p-10 bg-slate-50 min-h-screen">
         
         <div class="mb-10">
-            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">👋 Welcome, {{ locker.primary_holder }}!</h1>
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight"><i data-lucide="hand" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i> Welcome, {{ locker.primary_holder }}!</h1>
             <p class="text-slate-500 font-medium mt-1">View your locker details and payment status.</p>
         </div>
 
@@ -80,7 +81,7 @@
                 
                 <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center">
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-4 text-blue-600">
-                        💳
+                        <i data-lucide="credit-card" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i>
                     </div>
                     <p class="text-sm text-slate-500 font-bold uppercase tracking-wider mb-2">Rent Status</p>
                     <p class="text-5xl font-extrabold text-slate-800 mb-4">₹{{ locker.rent }}</p>
@@ -88,14 +89,14 @@
                     
                     {% if locker.due_date < today %}
                         <div class="w-full bg-red-100 text-red-800 px-4 py-3 rounded-xl font-bold border border-red-200 flex flex-col items-center justify-center gap-1">
-                            <div class="flex items-center gap-2"><span class="text-lg">🔴</span> Overdue</div>
+                            <div class="flex items-center gap-2"><span class="text-lg"><i data-lucide="alert-circle" class="inline-block text-red-500" style="width: 1em; height: 1em;"></i></span> Overdue</div>
                             {% if locker.has_penalty %}
                                 <span class="text-xs bg-red-200 px-3 py-1 rounded-full mt-2 text-red-900">Includes ₹500 penalty</span>
                             {% endif %}
                         </div>
                     {% else %}
                         <div class="w-full bg-green-100 text-green-800 px-4 py-3 rounded-xl font-bold border border-green-200 flex items-center justify-center gap-2">
-                            <span class="text-lg">🟢</span> Active and Paid
+                            <span class="text-lg"><i data-lucide="check-circle" class="inline-block text-green-500" style="width: 1em; height: 1em;"></i></span> Active and Paid
                         </div>
                     {% endif %}
                 </div>
@@ -103,10 +104,11 @@
 
             <div class="mt-10 border-t border-slate-100 pt-8 text-center">
                 <a href="/agreement/{{ locker.locker_no }}" class="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-10 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 w-full sm:w-auto text-lg">
-                    <span>📄</span> View Rental Agreement
+                    <span><i data-lucide="file-text" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> View Rental Agreement
                 </a>
             </div>
         </div>
     </main>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -9,6 +9,7 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex text-slate-800 font-['Outfit']">
     
@@ -17,7 +18,7 @@
         <div>
             <!-- Branding -->
             <div class="p-6 border-b border-slate-800 flex items-center gap-3">
-                <span class="text-3xl">🏦</span>
+                <span class="text-3xl"><i data-lucide="landmark" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span>
                 <div>
                     <h1 class="text-2xl font-extrabold tracking-tight">VaultManager</h1>
                     <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Enterprise Edition</p>
@@ -27,14 +28,14 @@
             <!-- Navigation -->
             <nav class="p-4 space-y-2 mt-4">
                 <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
-                <a href="/" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium"><span class="text-xl">📊</span> Overview</a>
-                <a href="/history" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-900/20"><span class="text-xl">🗄️</span> Audit History</a>
-                <a href="/client-login" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium" target="_blank"><span class="text-xl">👤</span> Client Portal</a>
+                <a href="/" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium"><span class="text-xl"><i data-lucide="layout-dashboard" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Overview</a>
+                <a href="/history" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-900/20"><span class="text-xl"><i data-lucide="archive" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Audit History</a>
+                <a href="/client-login" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium" target="_blank"><span class="text-xl"><i data-lucide="user" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Client Portal</a>
                 
                 <p class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Management</p>
-                <a href="/export" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium"><span class="text-xl">📥</span> Export Reports</a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 rounded-xl font-medium cursor-not-allowed"><span class="text-xl opacity-50">⚙️</span> Settings (Locked)</a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 rounded-xl font-medium cursor-not-allowed"><span class="text-xl opacity-50">🎧</span> Support</a>
+                <a href="/export" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors font-medium"><span class="text-xl"><i data-lucide="download" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Export Reports</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 rounded-xl font-medium cursor-not-allowed"><span class="text-xl opacity-50"><i data-lucide="settings" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Settings (Locked)</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-500 rounded-xl font-medium cursor-not-allowed"><span class="text-xl opacity-50"><i data-lucide="headphones" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></span> Support</a>
             </nav>
         </div>
         
@@ -48,7 +49,7 @@
                 </div>
             </div>
             <a href="/logout" class="flex items-center justify-center gap-2 w-full bg-slate-800 text-slate-300 hover:bg-red-500 hover:text-white font-bold py-2.5 rounded-xl transition-all shadow border border-slate-700 hover:border-red-500">
-                🚪 Secure Logout
+                <i data-lucide="log-out" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i> Secure Logout
             </a>
         </div>
     </aside>
@@ -63,7 +64,7 @@
 
         <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 mb-10">
             <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
-                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xl">🔒</div>
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-xl"><i data-lucide="lock" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></div>
                 <div>
                     <h2 class="text-xl font-extrabold text-slate-800">Surrendered Accounts</h2>
                     <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Compliance Log</p>
@@ -93,7 +94,7 @@
                         {% else %}
                         <tr>
                             <td colspan="5" class="p-12 text-center text-slate-500 font-medium">
-                                <div class="text-3xl mb-2">📋</div>
+                                <div class="text-3xl mb-2"><i data-lucide="clipboard-list" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></div>
                                 No surrendered lockers found.
                             </td>
                         </tr>
@@ -106,7 +107,7 @@
         <!-- New Section for Full Audit Trail -->
         <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 mb-10">
             <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
-                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl">⏱️</div>
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl"><i data-lucide="clock" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></div>
                 <div>
                     <h2 class="text-xl font-extrabold text-slate-800">Full System Audit Trail</h2>
                     <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">All Actions & Signatures</p>
@@ -132,7 +133,7 @@
                         {% else %}
                         <tr>
                             <td colspan="3" class="p-12 text-center text-slate-500 font-medium">
-                                <div class="text-3xl mb-2">📭</div>
+                                <div class="text-3xl mb-2"><i data-lucide="inbox" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i></div>
                                 No system logs found.
                             </td>
                         </tr>
@@ -143,5 +144,6 @@
         </div>
 
     </main>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

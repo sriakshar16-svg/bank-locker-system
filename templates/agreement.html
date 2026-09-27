@@ -16,12 +16,13 @@
             .container { box-shadow: none; border: none; max-width: 100%; margin: 0; }
         }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-50 p-8 min-h-screen">
     <div class="max-w-3xl mx-auto bg-white p-12 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-200 container relative">
         
         <div class="absolute top-8 right-12 no-print">
-            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-bold hover:bg-gray-700 shadow">🖨️ Print Document</button>
+            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded text-sm font-bold hover:bg-gray-700 shadow"><i data-lucide="printer" class="inline-block w-current h-current" style="width: 1em; height: 1em;"></i> Print Document</button>
         </div>
 
         <div class="text-center border-b-2 border-gray-800 pb-6 mb-8 mt-8">
@@ -159,5 +160,6 @@
         });
     </script>
     {% endif %}
+    <script>lucide.createIcons();</script>
 </body>
 </html>
